@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="es" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Iglesia Bautista Peniel - Un Lugar de Fe y Esperanza</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Merriweather:ital,wght@0,300;0,400;0,700;1,300&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Alpine.js para interactividad (Modales, Menú Móvil, Filtros) -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Configuración personalizada de Tailwind -->
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            50: '#f0f7ff',
+                            100: '#e0effe',
+                            500: '#1d4ed8', // Azul Marino Principal
+                            800: '#1e3a8a',
+                            900: '#0f172a',
+                        },
+                        gold: {
+                            400: '#fbbf24',
+                            500: '#d97706', // Dorado Cálido
+                            600: '#b45309',
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Montserrat', 'sans-serif'],
+                        serif: ['Merriweather', 'serif'],
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Estilos personalizados adicionales */
+        .hero-overlay {
+            background: linear-gradient(rgba(15, 23, 42, 0.75), rgba(15, 23, 42, 0.85));
+        }
+    </style>
+</head>
+<body x-data="{ darkMode: false, activeCategory: 'todos', modalOpen: false, modalImg: '', modalTitle: '', notification: false }" :class="{ 'dark bg-slate-900 text-slate-100': darkMode, 'bg-slate-50 text-slate-800': !darkMode }" class="font-sans antialiased transition-colors duration-300">
+
+    <!-- NAV BAR (Navegación) -->
+    <header x-data="{ mobileMenuOpen: false }" class="sticky top-0 z-50 bg-white/95 dark:bg-slate-900/95 backdrop-blur-md shadow-md border-b border-slate-100 dark:border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-20">
+                <!-- Logo & Nombre -->
+                <a href="#" class="flex items-center space-x-3 group">
+                    <div class="w-10 h-10 rounded-full bg-brand-800 text-gold-400 flex items-center justify-center shadow-lg group-hover:bg-brand-900 transition">
+                        <!-- Icono Cruz / Luz -->
+                        <i data-lucide="cross" class="w-6 h-6"></i>
+                    </div>
+                    <div>
+                        <!-- NOMBRE DE LA IGLESIA: Edita el texto aquí -->
+                        <span class="text-xl font-bold font-serif tracking-tight text-brand-900 dark:text-white block">Iglesia Bautista Peniel</span>
+                        <span class="text-xs text-gold-500 font-medium tracking-wider uppercase block">Comunidad de Fe</span>
+                    </div>
+                </a>
+
+                <!-- Menú Escritorio -->
+                <nav class="hidden md:flex space-x-8 text-sm font-semibold">
+                    <a href="#inicio" class="text-slate-700 dark:text-slate-200 hover:text-brand-500 dark:hover:text-gold-400 transition">Inicio</a>
+                    <a href="#nosotros" class="text-slate-700 dark:text-slate-200 hover:text-brand-500 dark:hover:text-gold-400 transition">Nosotros</a>
+                    <a href="#organizacion" class="text-slate-700 dark:text-slate-200 hover:text-brand-500 dark:hover:text-gold-400 transition">Organización</a>
+                    <a href="#horarios" class="text-slate-700 dark:text-slate-200 hover:text-brand-500 dark:hover:text-gold-400 transition">Cultos</a>
+                    <a href="#galeria" class="text-slate-700 dark:text-slate-200 hover:text-brand-500 dark:hover:text-gold-400 transition">Galería</a>
+                    <a href="#contacto" class="text-slate-700 dark:text-slate-200 hover:text-brand-500 dark:hover:text-gold-400 transition">Contacto</a>
+                </nav>
+
+                <!-- Acciones (Modo Oscuro & Botón Contacto) -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button @click="darkMode = !darkMode" class="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 transition" title="Cambiar modo">
+                        <i x-show="!darkMode" data-lucide="moon" class="w-5 h-5"></i>
+                        <i x-show="darkMode" data-lucide="sun" class="w-5 h-5"></i>
+                    </button>
+                    <a href="#contacto" class="bg-gold-500 hover:bg-gold-600 text-white font-semibold text-sm px-5 py-2.5 rounded-full shadow-md transition transform hover:-translate-y-0.5">
+                        Petición de Oración
+                    </a>
+                </div>
+
+                <!-- Botón Menú Móvil -->
+                <div class="md:hidden flex items-center space-x-2">
+                    <button @click="darkMode = !darkMode" class="p-2 rounded-full text-slate-600 dark:text-slate-300">
+                        <i x-show="!darkMode" data-lucide="moon" class="w-5 h-5"></i>
+                        <i x-show="darkMode" data-lucide="sun" class="w-5 h-5"></i>
+                    </button>
+                    <button @click="mobileMenuOpen = !mobileMenuOpen" class="text-slate-700 dark:text-slate-200 p-2 focus:outline-none">
+                        <i x-show="!mobileMenuOpen" data-lucide="menu" class="w-7 h-7"></i>
+                        <i x-show="mobileMenuOpen" data-lucide="x" class="w-7 h-7"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Menú Desplegable Móvil -->
+        <div x-show="mobileMenuOpen" @click.away="mobileMenuOpen = false" class="md:hidden bg-white dark:bg-slate-900 border-b border-slate-200 dark:border-slate-800 px-4 pt-2 pb-6 space-y-3">
+            <a @click="mobileMenuOpen = false" href="#inicio" class="block py-2 text-slate-700 dark:text-slate-200 font-medium">Inicio</a>
+            <a @click="mobileMenuOpen = false" href="#nosotros" class="block py-2 text-slate-700 dark:text-slate-200 font-medium">Nosotros</a>
+            <a @click="mobileMenuOpen = false" href="#organizacion" class="block py-2 text-slate-700 dark:text-slate-200 font-medium">Organización</a>
+            <a @click="mobileMenuOpen = false" href="#horarios" class="block py-2 text-slate-700 dark:text-slate-200 font-medium">Cultos</a>
+            <a @click="mobileMenuOpen = false" href="#galeria" class="block py-2 text-slate-700 dark:text-slate-200 font-medium">Galería</a>
+            <a @click="mobileMenuOpen = false" href="#contacto" class="block py-2 text-slate-700 dark:text-slate-200 font-medium">Contacto</a>
+            <a @click="mobileMenuOpen = false" href="#contacto" class="block w-full text-center bg-gold-500 text-white font-semibold py-2.5 rounded-full mt-4">Petición de Oración</a>
+        </div>
+    </header>
+
+    <!-- SECCIÓN INICIO (Hero) -->
+    <section id="inicio" class="relative min-h-[85vh] flex items-center justify-center bg-cover bg-center text-white" style="background-image: url('https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&w=1920&q=80');">
+        <div class="absolute inset-0 hero-overlay"></div>
+        <div class="relative max-w-4xl mx-auto text-center px-4 py-20 z-10">
+            <div class="inline-flex items-center space-x-2 bg-white/10 backdrop-blur-md px-4 py-1.5 rounded-full text-gold-400 font-medium text-sm mb-6 border border-white/20">
+                <i data-lucide="sparkles" class="w-4 h-4"></i>
+                <span>Bienvenidos a Nuestra Iglesia</span>
+            </div>
+            <!-- TITULO PRINCIPAL -->
+            <h1 class="text-4xl md:text-6xl font-serif font-bold tracking-tight mb-6 leading-tight">
+                Un lugar para crecer en <span class="text-gold-400 italic">fe, esperanza</span> y amor
+            </h1>
+            <!-- SUBTITULO / MENSAJE -->
+            <p class="text-lg md:text-xl text-slate-200 max-w-2xl mx-auto mb-10 font-light leading-relaxed">
+                Somos una comunidad comprometida con compartir el mensaje del Evangelio, restaurar vidas y servir con alegría a todas las familias.
+            </p>
+            <!-- BOTONES -->
+            <div class="flex flex-col sm:flex-row justify-center items-center gap-4">
+                <a href="#horarios" class="w-full sm:w-auto bg-gold-500 hover:bg-gold-600 text-white font-semibold px-8 py-4 rounded-full shadow-lg transition transform hover:-translate-y-1 flex items-center justify-center space-x-2">
+                    <i data-lucide="calendar" class="w-5 h-5"></i>
+                    <span>Ver Días de Culto</span>
+                </a>
+                <a href="#contacto" class="w-full sm:w-auto bg-white/10 hover:bg-white/20 border border-white/30 backdrop-blur-sm text-white font-semibold px-8 py-4 rounded-full transition flex items-center justify-center space-x-2">
+                    <i data-lucide="map-pin" class="w-5 h-5"></i>
+                    <span>Visítanos</span>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN NOSOTROS (Misión y Principios) -->
+    <section id="nosotros" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-sm font-bold text-gold-500 uppercase tracking-widest mb-2">Conócenos</h2>
+            <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white">Nuestra Misión y Principios</p>
+            <div class="w-20 h-1 bg-gold-500 mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <!-- Tarjeta de Misión -->
+        <div class="bg-gradient-to-br from-brand-800 to-brand-900 text-white rounded-3xl p-8 md:p-12 shadow-2xl mb-16 relative overflow-hidden">
+            <div class="absolute -right-10 -bottom-10 opacity-10">
+                <i data-lucide="heart" class="w-80 h-80"></i>
+            </div>
+            <div class="relative z-10 max-w-3xl">
+                <div class="inline-flex items-center space-x-2 bg-gold-500/20 text-gold-400 px-3 py-1 rounded-full text-xs font-semibold mb-4 border border-gold-500/30">
+                    <i data-lucide="target" class="w-4 h-4"></i>
+                    <span>PROPÓSITO PRINCIPAL</span>
+                </div>
+                <h3 class="text-2xl md:text-3xl font-serif font-bold mb-4">Nuestra Misión</h3>
+                <p class="text-lg text-slate-200 leading-relaxed font-light">
+                    Transformar vidas a través del amor de Jesucristo, proclamando la Verdad de la Palabra de Dios, promoviendo la restauración de las familias y siendo un faro de esperanza y ayuda social para nuestra comunidad.
+                </p>
+            </div>
+        </div>
+
+        <!-- Grid de Principios / Valores -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            <!-- Principio 1 -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 dark:border-slate-700">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 flex items-center justify-center mb-6">
+                    <i data-lucide="book-open" class="w-6 h-6"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Fe y Enseñanza</h4>
+                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Creemos firmemente en las Sagradas Escrituras como guía suprema e inerrante para nuestra vida diaria y crecimiento espiritual.
+                </p>
+            </div>
+
+            <!-- Principio 2 -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 dark:border-slate-700">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 flex items-center justify-center mb-6">
+                    <i data-lucide="heart" class="w-6 h-6"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Amor Fraternal</h4>
+                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Fomentamos una comunidad donde el amor incondicional, la empatía y la compasión guíen nuestras relaciones interpersonales.
+                </p>
+            </div>
+
+            <!-- Principio 3 -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 dark:border-slate-700">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 flex items-center justify-center mb-6">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Comunidad Integrada</h4>
+                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Valoramos la unidad en la diversidad. Cada persona tiene un lugar especial y un propósito importante en la casa de Dios.
+                </p>
+            </div>
+
+            <!-- Principio 4 -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 dark:border-slate-700">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 flex items-center justify-center mb-6">
+                    <i data-lucide="sun" class="w-6 h-6"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Esperanza Viva</h4>
+                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Proclamamos el mensaje de salvación que ofrece paz en medio de las pruebas y una esperanza firme para el futuro.
+                </p>
+            </div>
+
+            <!-- Principio 5 -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 dark:border-slate-700">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 flex items-center justify-center mb-6">
+                    <i data-lucide="hand-heart" class="w-6 h-6"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Servicio Social</h4>
+                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Extendemos nuestras manos para ayudar a los necesitados, huérfanos y viudas, reflejando el amor práctico de Jesús.
+                </p>
+            </div>
+
+            <!-- Principio 6 -->
+            <div class="bg-white dark:bg-slate-800 p-8 rounded-2xl shadow-sm hover:shadow-md transition border border-slate-100 dark:border-slate-700">
+                <div class="w-12 h-12 rounded-xl bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 flex items-center justify-center mb-6">
+                    <i data-lucide="shield-check" class="w-6 h-6"></i>
+                </div>
+                <h4 class="text-xl font-bold mb-3 text-slate-900 dark:text-white">Integridad y Excelencia</h4>
+                <p class="text-slate-600 dark:text-slate-300 text-sm leading-relaxed">
+                    Buscamos la honradez y la excelencia en todo lo que emprendemos, viviendo vidas testimoniales transparentes.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN ORGANIZACIÓN -->
+    <section id="organizacion" class="py-20 bg-slate-100 dark:bg-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-16">
+                <h2 class="text-sm font-bold text-gold-500 uppercase tracking-widest mb-2">Estructura</h2>
+                <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white">Nuestra Organización y Ministerios</p>
+                <p class="text-slate-600 dark:text-slate-400 mt-2">Contamos con un equipo de liderazgo comprometido y diversas áreas para toda la familia.</p>
+                <div class="w-20 h-1 bg-gold-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Liderazgo Principal -->
+            <div class="mb-16">
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-8 border-l-4 border-gold-500 pl-3">Liderazgo Pastorales</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Pastor 1 -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col sm:flex-row">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=400&q=80" alt="Pastor Principal" class="w-full sm:w-48 h-56 object-cover">
+                        <div class="p-6 flex flex-col justify-center">
+                            <span class="text-xs font-semibold text-gold-500 uppercase">Pastores Principales</span>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white mt-1">Brache y Dayimi Brache</h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Sirviendo a la congregación con dedicación desde hace más de 15 años, guiando a las familias en la Palabra.</p>
+                        </div>
+                    </div>
+
+                    <!-- Liderazgo 2 -->
+                    <div class="bg-white dark:bg-slate-800 rounded-2xl overflow-hidden shadow-sm flex flex-col sm:flex-row">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=400&q=80" alt="Equipo Pastoral" class="w-full sm:w-48 h-56 object-cover">
+                        <div class="p-6 flex flex-col justify-center">
+                            <span class="text-xs font-semibold text-gold-500 uppercase">Pastores Asociados</span>
+                            <h4 class="text-xl font-bold text-slate-900 dark:text-white mt-1">Jenner Rondon / Andres Becerra </h4>
+                            <p class="text-sm text-slate-500 dark:text-slate-400 mt-2">Encargados del área de consejería, discipulado y desarrollo de ministerios comunitarios.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Grid de Ministerios -->
+            <div>
+                <h3 class="text-xl font-bold text-slate-900 dark:text-white mb-8 border-l-4 border-gold-500 pl-3">Ministerios de la Iglesia</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="w-10 h-10 rounded-lg bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 flex items-center justify-center mb-4">
+                            <i data-lucide="smile" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Ministerio Infantil</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Escuela dominical, clases bíblicas dinámicas y valores para niños de todas las edades.</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="w-10 h-10 rounded-lg bg-amber-100 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400 flex items-center justify-center mb-4">
+                            <i data-lucide="zap" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Jóvenes con Propósito</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Reuniones de jóvenes, campamentos, eventos de alabanza y alcance juvenil.</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400 flex items-center justify-center mb-4">
+                            <i data-lucide="users-round" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Damas y Caballeros</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Grupos de estudio, oración y compañerismo para fortalecer a hombres y mujeres.</p>
+                    </div>
+
+                    <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700">
+                        <div class="w-10 h-10 rounded-lg bg-purple-100 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400 flex items-center justify-center mb-4">
+                            <i data-lucide="globe" class="w-5 h-5"></i>
+                        </div>
+                        <h4 class="font-bold text-slate-900 dark:text-white mb-2">Misiones y Evang.</h4>
+                        <p class="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">Apoyo a misioneros, brigadas de ayuda social y evangelismo en las calles.</p>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN HORARIOS DE CULTO -->
+    <section id="horarios" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="text-center max-w-3xl mx-auto mb-16">
+            <h2 class="text-sm font-bold text-gold-500 uppercase tracking-widest mb-2">Reuniones</h2>
+            <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white">Días de Culto y Actividades</p>
+            <p class="text-slate-600 dark:text-slate-400 mt-2">¡Te esperamos con los brazos abiertos! Ven con tu familia a alabar a Dios.</p>
+            <div class="w-20 h-1 bg-gold-500 mx-auto mt-4 rounded-full"></div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <!-- Domingo -->
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border-2 border-gold-500 shadow-xl relative transform hover:-translate-y-2 transition">
+                <div class="absolute -top-4 right-8 bg-gold-500 text-white text-xs font-bold uppercase tracking-wider py-1 px-3 rounded-full">
+                    Principal
+                </div>
+                <div class="w-12 h-12 bg-gold-100 dark:bg-gold-900/30 text-gold-600 rounded-2xl flex items-center justify-center mb-6">
+                    <i data-lucide="sun" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Domingos</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Día del Señor y Adoración Familiar</p>
+                <div class="space-y-4 border-t border-slate-100 dark:border-slate-700 pt-4">
+                    <div>
+                        <span class="text-xs text-gold-500 font-bold block">10:00 AM</span>
+                        <span class="font-semibold text-slate-800 dark:text-slate-200">Estudio Biblico</span>
+                    </div>
+                    <div>
+                        <span class="text-xs text-gold-500 font-bold block">11:00 AM</span>
+                        <span class="font-semibold text-slate-800 dark:text-slate-200">Culto y Predica</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Miércoles -->
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transition transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 rounded-2xl flex items-center justify-center mb-6">
+                    <i data-lucide="book-open" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Miércoles</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Grupo de Vida</p>
+                <div class="space-y-4 border-t border-slate-100 dark:border-slate-700 pt-4">
+                    <div>
+                        <span class="text-xs text-brand-500 dark:text-gold-400 font-bold block">07:00 PM</span>
+                        <span class="font-semibold text-slate-800 dark:text-slate-200">Estudio Bíblico y Oración</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Viernes -->
+            <div class="bg-white dark:bg-slate-800 rounded-3xl p-8 border border-slate-200 dark:border-slate-700 shadow-md hover:shadow-lg transition transform hover:-translate-y-1">
+                <div class="w-12 h-12 bg-brand-50 dark:bg-slate-700 text-brand-500 dark:text-gold-400 rounded-2xl flex items-center justify-center mb-6">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Viernes</h3>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Jovenes Adultos</p>
+                <div class="space-y-4 border-t border-slate-100 dark:border-slate-700 pt-4">
+                    <div>
+                        <span class="text-xs text-brand-500 dark:text-gold-400 font-bold block">07:30 PM</span>
+                        <span class="font-semibold text-slate-800 dark:text-slate-200">Reunión de Jóvenes Adultos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN GALERÍA DE FOTOS -->
+    <section id="galeria" class="py-20 bg-slate-100 dark:bg-slate-800/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12">
+                <h2 class="text-sm font-bold text-gold-500 uppercase tracking-widest mb-2">Momentos</h2>
+                <p class="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white">Galería de Fotos</p>
+                <p class="text-slate-600 dark:text-slate-400 mt-2">Un recorrido visual por nuestros cultos, eventos y actividades de la comunidad.</p>
+                <div class="w-20 h-1 bg-gold-500 mx-auto mt-4 rounded-full"></div>
+            </div>
+
+            <!-- Filtros de Galería -->
+            <div class="flex flex-wrap justify-center gap-2 mb-10">
+                <button @click="activeCategory = 'todos'" :class="activeCategory === 'todos' ? 'bg-brand-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'" class="px-5 py-2 rounded-full text-sm font-medium transition shadow-sm">Todos</button>
+                <button @click="activeCategory = 'cultos'" :class="activeCategory === 'cultos' ? 'bg-brand-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'" class="px-5 py-2 rounded-full text-sm font-medium transition shadow-sm">Cultos</button>
+                <button @click="activeCategory = 'eventos'" :class="activeCategory === 'eventos' ? 'bg-brand-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'" class="px-5 py-2 rounded-full text-sm font-medium transition shadow-sm">Eventos</button>
+                <button @click="activeCategory = 'comunidad'" :class="activeCategory === 'comunidad' ? 'bg-brand-800 text-white' : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-300 hover:bg-slate-200'" class="px-5 py-2 rounded-full text-sm font-medium transition shadow-sm">Comunidad</button>
+            </div>
+
+            <!-- Grid de Imágenes -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <!-- Foto 1 -->
+                <div x-show="activeCategory === 'todos' || activeCategory === 'cultos'" class="group relative overflow-hidden rounded-2xl shadow-md cursor-pointer h-64" @click="modalOpen = true; modalImg = 'https://images.unsplash.com/photo-1510519138161-58446231f11f?auto=format&fit=crop&w=800&q=80'; modalTitle = 'Servicio de Alabanza'">
+                    <img src="https://images.unsplash.com/photo-1510519138161-58446231f11f?auto=format&fit=crop&w=600&q=80" alt="Culto" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <span class="text-white font-medium text-lg">Servicio Dominical de Alabanza</span>
+                    </div>
+                </div>
+
+                <!-- Foto 2 -->
+                <div x-show="activeCategory === 'todos' || activeCategory === 'eventos'" class="group relative overflow-hidden rounded-2xl shadow-md cursor-pointer h-64" @click="modalOpen = true; modalImg = 'https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&fit=crop&w=800&q=80'; modalTitle = 'Reunión de Jóvenes'">
+                    <img src="https://images.unsplash.com/photo-1478147427282-58a87a120781?auto=format&fit=crop&w=600&q=80" alt="Jóvenes" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <span class="text-white font-medium text-lg">Congreso Anual de Jóvenes</span>
+                    </div>
+                </div>
+
+                <!-- Foto 3 -->
+                <div x-show="activeCategory === 'todos' || activeCategory === 'comunidad'" class="group relative overflow-hidden rounded-2xl shadow-md cursor-pointer h-64" @click="modalOpen = true; modalImg = 'https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=800&q=80'; modalTitle = 'Voluntariado Comunitario'">
+                    <img src="https://images.unsplash.com/photo-1593113598332-cd288d649433?auto=format&fit=crop&w=600&q=80" alt="Voluntariado" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <span class="text-white font-medium text-lg">Jornada Social de Ayuda</span>
+                    </div>
+                </div>
+
+                <!-- Foto 4 -->
+                <div x-show="activeCategory === 'todos' || activeCategory === 'cultos'" class="group relative overflow-hidden rounded-2xl shadow-md cursor-pointer h-64" @click="modalOpen = true; modalImg = 'https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&w=800&q=80'; modalTitle = 'Templo y Altar'">
+                    <img src="https://images.unsplash.com/photo-1438032005730-c779502df39b?auto=format&fit=crop&w=600&q=80" alt="Instalaciones" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <span class="text-white font-medium text-lg">Nuestras Instalaciones</span>
+                    </div>
+                </div>
+
+                <!-- Foto 5 -->
+                <div x-show="activeCategory === 'todos' || activeCategory === 'comunidad'" class="group relative overflow-hidden rounded-2xl shadow-md cursor-pointer h-64" @click="modalOpen = true; modalImg = 'https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=800&q=80'; modalTitle = 'Compañerismo'">
+                    <img src="https://images.unsplash.com/photo-1529156069898-49953e39b3ac?auto=format&fit=crop&w=600&q=80" alt="Compañerismo" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <span class="text-white font-medium text-lg">Día de Integración Familiar</span>
+                    </div>
+                </div>
+
+                <!-- Foto 6 -->
+                <div x-show="activeCategory === 'todos' || activeCategory === 'eventos'" class="group relative overflow-hidden rounded-2xl shadow-md cursor-pointer h-64" @click="modalOpen = true; modalImg = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80'; modalTitle = 'Bautismos'">
+                    <img src="https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=600&q=80" alt="Bautismos" class="w-full h-full object-cover group-hover:scale-110 transition duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition duration-300 flex items-end p-6">
+                        <span class="text-white font-medium text-lg">Fiesta de Bautismos</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- MODAL LIGHTBOX PARA FOTOS -->
+        <div x-show="modalOpen" x-transition class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/90" style="display: none;">
+            <button @click="modalOpen = false" class="absolute top-6 right-6 text-white hover:text-gold-400 p-2">
+                <i data-lucide="x" class="w-8 h-8"></i>
+            </button>
+            <div class="max-w-4xl w-full text-center" @click.away="modalOpen = false">
+                <img :src="modalImg" class="max-h-[80vh] mx-auto rounded-xl shadow-2xl object-contain">
+                <p x-text="modalTitle" class="text-white font-medium mt-4 text-lg"></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECCIÓN CONTACTO -->
+    <section id="contacto" class="py-20 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
+            
+            <!-- Info de Contacto -->
+            <div>
+                <h2 class="text-sm font-bold text-gold-500 uppercase tracking-widest mb-2">Contacto</h2>
+                <h3 class="text-3xl md:text-4xl font-serif font-bold text-slate-900 dark:text-white mb-6">Estamos aquí para ti</h3>
+                <p class="text-slate-600 dark:text-slate-400 mb-8 leading-relaxed">
+                    Si necesitas consejería, deseas visitarnos o quieres comunicarte con nuestro equipo, utiliza los datos a continuación o envíanos un mensaje.
+                </p>
+
+                <div class="space-y-6">
+                    <!-- Ubicación -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-brand-50 dark:bg-slate-800 text-brand-500 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="map-pin" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Dirección</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">911 NE 8th Ave, Ocala, FL, 34470, USA</p>
+                        </div>
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-brand-50 dark:bg-slate-800 text-brand-500 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="phone" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Teléfonos</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">+001 (352) 718-7413 </p>
+                        </div>
+                    </div>
+
+                    <!-- Email -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-brand-50 dark:bg-slate-800 text-brand-500 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="mail" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Correo Electrónico</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">iglesiapenielocalafl@gmail.com</p>
+                        </div>
+                    </div>
+
+                    <!-- Horarios de Oficina -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-10 h-10 rounded-full bg-brand-50 dark:bg-slate-800 text-brand-500 dark:text-gold-400 flex items-center justify-center flex-shrink-0">
+                            <i data-lucide="clock" class="w-5 h-5"></i>
+                        </div>
+                        <div>
+                            <h4 class="font-bold text-slate-900 dark:text-white">Oficina Pastoral</h4>
+                            <p class="text-sm text-slate-600 dark:text-slate-400">Lunes a Viernes: 09:00 AM - 05:00 PM</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Redes Sociales -->
+                <div class="mt-8 pt-8 border-t border-slate-200 dark:border-slate-800">
+                    <h4 class="font-bold text-slate-900 dark:text-white mb-4">Síguenos en Redes Sociales</h4>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center hover:bg-brand-800 hover:text-white transition">
+                            <i data-lucide="facebook" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center hover:bg-brand-800 hover:text-white transition">
+                            <i data-lucide="instagram" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-slate-200 dark:bg-slate-800 text-slate-700 dark:text-slate-300 flex items-center justify-center hover:bg-brand-800 hover:text-white transition">
+                            <i data-lucide="youtube" class="w-5 h-5"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-emerald-500 text-white flex items-center justify-center hover:bg-emerald-600 transition">
+                            <i data-lucide="message-circle" class="w-5 h-5"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Formulario de Contacto / Oración -->
+            <div class="bg-white dark:bg-slate-800 p-8 md:p-10 rounded-3xl shadow-lg border border-slate-100 dark:border-slate-700">
+                <h4 class="text-2xl font-bold text-slate-900 dark:text-white mb-2">Envíanos un Mensaje</h4>
+                <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">¿Tiene una petición de oración o una consulta? Escríbenos confidencialmente.</p>
+
+                <!-- Mensaje de confirmación -->
+                <div x-show="notification" class="mb-6 bg-emerald-100 border border-emerald-400 text-emerald-800 px-4 py-3 rounded-xl text-sm flex items-center space-x-2">
+                    <i data-lucide="check-circle" class="w-5 h-5"></i>
+                    <span>¡Gracias por escribirnos! Tu mensaje o petición ha sido enviada con éxito.</span>
+                </div>
+
+                <form @submit.prevent="notification = true; setTimeout(() => notification = false, 5000)" class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Nombre Completo</label>
+                        <input type="text" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-gold-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Correo Electrónico</label>
+                        <input type="email" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-gold-500">
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Motivo</label>
+                        <select class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-gold-500">
+                            <option>Petición de Oración</option>
+                            <option>Información de Cultos</option>
+                            <option>Consejería Pastoral</option>
+                            <option>Otro Asunto</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Mensaje o Petición</label>
+                        <textarea rows="4" required class="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-700 bg-slate-50 dark:bg-slate-900 text-slate-800 dark:text-slate-200 focus:outline-none focus:ring-2 focus:ring-gold-500"></textarea>
+                    </div>
+
+                    <button type="submit" class="w-full bg-gold-500 hover:bg-gold-600 text-white font-bold py-3.5 rounded-xl shadow-md transition transform hover:-translate-y-0.5">
+                        Enviar Mensaje
+                    </button>
+                </form>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer class="bg-brand-900 text-white py-12 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center md:text-left">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center justify-center md:justify-start space-x-2 mb-4">
+                        <i data-lucide="cross" class="w-6 h-6 text-gold-400"></i>
+                        <span class="text-xl font-bold font-serif">Iglesia Bautista Penniel</span>
+                    </div>
+                    <p class="text-sm text-slate-400">Un lugar de bendición para ti y tu familia. Todos son bienvenidos.</p>
+                </div>
+
+                <div class="text-center">
+                    <h4 class="font-bold mb-4 text-gold-400">Navegación Rápida</h4>
+                    <div class="space-x-4 text-sm text-slate-300">
+                        <a href="#inicio" class="hover:text-gold-400">Inicio</a>
+                        <a href="#nosotros" class="hover:text-gold-400">Nosotros</a>
+                        <a href="#horarios" class="hover:text-gold-400">Cultos</a>
+                        <a href="#contacto" class="hover:text-gold-400">Contacto</a>
+                    </div>
+                </div>
+
+                <div class="text-center md:text-right">
+                    <h4 class="font-bold mb-4 text-gold-400">Versículo del Día</h4>
+                    <p class="text-sm italic text-slate-300">"Porque donde están dos o tres congregados en mi nombre, allí estoy yo en medio de ellos."</p>
+                    <span class="text-xs text-slate-400 font-bold block mt-1">- Mateo 18:20</span>
+                </div>
+            </div>
+
+            <div class="border-t border-slate-800 pt-8 text-center text-xs text-slate-500">
+                <p>&copy; 2026 Iglesia Bautista Peniel. Todos los derechos reservados. Creado para la Gloria de Dios.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Inicializar iconos Lucide -->
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
